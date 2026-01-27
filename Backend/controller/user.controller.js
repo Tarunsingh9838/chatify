@@ -97,15 +97,53 @@ const logout = (req, res) => {
 
 const allUsers = async (req, res) => {
   try {
-
     const loggedInUser = req.user._id;
+    const Conversation = require("../models/conversation.model");
 
-    const filteredUsers = await User.find({_id:{$ne:loggedInUser}}).select("-password");
-    res.status(200).json(filteredUsers);
+    // Get all users except logged in user
+    const filteredUsers = await User.find({ _id: { $ne: loggedInUser } }).select("-password");
+
+    // Get last message info for each user
+    const usersWithLastMessage = await Promise.all(
+      filteredUsers.map(async (user) => {
+        // Find conversation between logged in user and this user
+        const conversation = await Conversation.findOne({
+          members: { $all: [loggedInUser, user._id] },
+        }).populate({
+          path: "message",
+          options: { sort: { createdAt: -1 }, limit: 1 },
+        });
+
+        let lastMessage = null;
+        let lastMessageTime = null;
+
+        if (conversation && conversation.message && conversation.message.length > 0) {
+          const lastMsg = conversation.message[0];
+          lastMessage = lastMsg.message;
+          lastMessageTime = lastMsg.createdAt;
+        }
+
+        return {
+          ...user.toObject(),
+          lastMessage: lastMessage || "",
+          lastMessageTime: lastMessageTime || null,
+        };
+      })
+    );
+
+    // Sort users by last message time (most recent first)
+    usersWithLastMessage.sort((a, b) => {
+      if (!a.lastMessageTime && !b.lastMessageTime) return 0;
+      if (!a.lastMessageTime) return 1;
+      if (!b.lastMessageTime) return -1;
+      return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
+    });
+
+    res.status(200).json(usersWithLastMessage);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
-  } 
+  }
 };
 
 module.exports = {

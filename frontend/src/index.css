@@ -1,2 +1,26 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* Custom Telegram-style Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #17212b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a4a5c;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a5a6c;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a4a5c #17212b;
+}

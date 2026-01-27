@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 // import toast from "react-hot-toast";
 
 function Signup() {
-  const [authUser, setAuthUser] = useAuth() || [null, () => {}];
+  const [authUser, setAuthUser] = useAuth() || [null, () => { }];
   const {
     register,
     handleSubmit,
@@ -38,11 +38,11 @@ function Signup() {
           alert("Signup successful");
           // toast.success("Signup successful");
         }
-        localStorage.setItem("ChatApp", JSON.stringify(response.data));
-        setAuthUser(response.data);
+        localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
+        setAuthUser(response.data.user);
       })
       .catch((error) => {
-    
+
         if (error.response && error.response.data) {
           alert(error.response.data.message); // ✅ FIXED
         } else {
@@ -176,11 +176,11 @@ function Signup() {
                 Login
               </span> */}
               <Link
-								to="/login"
-								className="text-blue-500 underline cursor-pointer ml-1"
-							>
-								Login
-							</Link>
+                to="/login"
+                className="text-blue-500 underline cursor-pointer ml-1"
+              >
+                Login
+              </Link>
             </p>
             <input
               type="submit"

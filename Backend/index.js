@@ -8,9 +8,11 @@ const cookieParser = require('cookie-parser');
 
 const dotenv = require('dotenv');
 dotenv.config();
+const {app, server, io} =require ('./SocketIo/server.js')
 
 
-const app = express();
+
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -39,6 +41,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

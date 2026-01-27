@@ -22,9 +22,9 @@ function Login() {
     // console.log(userInfo);
     axios
       .post(
-		"http://localhost:3000/users/login",
-		 userInfo,
-		 { withCredentials: true })
+        "http://localhost:3000/users/login",
+        userInfo,
+        { withCredentials: true })
       .then((response) => {
         // console.log(response.data);
 
@@ -32,8 +32,8 @@ function Login() {
           alert("Login successful");
           // toast.success("Signup successful");
         }
-        localStorage.setItem("ChatApp", JSON.stringify(response.data));
-        setAuthUser(response.data);
+        localStorage.setItem("ChatApp", JSON.stringify(response.data.user));
+        setAuthUser(response.data.user);
       })
       .catch((error) => {
         if (error.response && error.response.data) {
@@ -113,8 +113,8 @@ function Login() {
                 Signup
               </span> */}
               <Link to="/signup" className="text-blue-500 underline cursor-pointer ml-1">
-								Signup
-							</Link>
+                Signup
+              </Link>
             </p>
             <input
               type="submit"
